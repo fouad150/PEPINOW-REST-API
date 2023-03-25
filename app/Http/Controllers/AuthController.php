@@ -12,7 +12,7 @@ class AuthController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth:api', ['except' => ['login', 'register']]);
+        $this->middleware('auth:api', ['except' => ['login', 'register', 'forgotPassword']]);
     }
 
     public function login(Request $request)
@@ -69,6 +69,54 @@ class AuthController extends Controller
             ]
         ]);
     }
+
+
+    public function forgotPassword(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|string|email',
+            'password' => 'required|string',
+        ]);
+
+
+        // Find the user with the given email address
+        $user = User::where('email', $request->email)->first();
+
+        if (!$user) {
+            return response()->json([
+                'message' => 'User not found'
+            ], 404);
+        }
+
+        // Update the user's password
+        // $user->password = Hash::make($request->password);
+        $user->password = $request->password;
+        $user->save();
+
+        return response()->json([
+            'message' => 'Password updated successfully'
+        ]);
+    }
+
+    public function editProfile(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|email',
+            'password' => 'required|string|min:5',
+        ]);
+
+        $id = Auth::id(); // Auth return the object of the authenticated user
+
+        $user = User::find($id);
+
+        // $user->password =  $request->password;
+        $user->password =  Hash::make($request->password);
+        $user->email = $request->email;
+        $user->save();
+
+        return response()->json(['message' => 'Profile updated successfully.']);
+    }
+
 
     public function logout()
     {
