@@ -1,7 +1,9 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\PlantController;
+use App\Http\Controllers\RoleController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -29,3 +31,5 @@ Route::controller(AuthController::class)->group(function () {
 });
 
 Route::apiResource('/plants', PlantController::class);
+Route::apiResource('/categories', CategoryController::class);
+Route::apiResource('/roles', RoleController::class);

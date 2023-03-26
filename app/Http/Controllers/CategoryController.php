@@ -2,12 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Plant;
-use App\Http\Requests\StorePlantRequest;
-use App\Http\Requests\UpdatePlantRequest;
+use App\Models\Category;
 use Illuminate\Http\Request;
 
-class PlantController extends Controller
+class CategoryController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -16,9 +14,9 @@ class PlantController extends Controller
      */
     public function index()
     {
-        $Plants = Plant::with('category')->get();
+        $categories = Category::with('plants')->get();
         return response()->json([
-            'record' => $Plants
+            'record' => $categories
         ]);
     }
 
@@ -41,17 +39,12 @@ class PlantController extends Controller
     {
 
         $request->validate([
-            'name' => 'required|string|max:255',
-            'description' => 'required|string',
-            'price' => 'required|numeric',
-            'image' => 'required|string',
-            'category_id' => 'required|int'
+            'category' => 'required|string|max:30',
         ]);
 
-
         $input = $request->all();
-        Plant::create($input);
-        return 'the plant has been created successfully';
+        Category::create($input);
+        return 'the category has been created successfully';
     }
 
     /**
@@ -60,13 +53,13 @@ class PlantController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(Plant $Plant)
+    public function show(Category $category)
     {
-        $Plant->find($Plant->id);
-        if (!$Plant) {
-            return response()->json(['message' => 'Plant not found'], 404);
+        $category->find($category->id);
+        if (!$category) {
+            return response()->json(['message' => 'category not found'], 404);
         }
-        return response()->json($Plant, 200);
+        return response()->json($category, 200);
     }
 
     /**
@@ -86,26 +79,22 @@ class PlantController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Plant $Plant)
+    public function update(Request $request, Category $category)
     {
         $request->validate([
-            'name' => 'required|string|max:255',
-            'description' => 'required|string',
-            'price' => 'required|numeric',
-            'image' => 'required|string',
-            'category_id' => 'required|int'
+            'category' => 'required|string|max:30',
         ]);
 
-        $Plant->update($request->all());
+        $category->update($request->all());
 
-        if (!$Plant) {
-            return response()->json(['message' => 'Plant not found'], 404);
+        if (!$category) {
+            return response()->json(['message' => 'category not found'], 404);
         }
 
         return response()->json([
             'status' => true,
-            'message' => "Plant Updated successfully!",
-            'Plant' => $Plant
+            'message' => "category Updated successfully!",
+            'category' => $category
         ], 200);
     }
 
@@ -115,19 +104,19 @@ class PlantController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Plant $plant)
+    public function destroy(Category $category)
     {
-        $plant->delete();
+        $category->delete();
 
-        if (!$plant) {
+        if (!$category) {
             return response()->json([
-                'message' => 'plant not found'
+                'message' => 'category not found'
             ], 404);
         }
 
         return response()->json([
             'status' => true,
-            'message' => 'plant deleted successfully'
+            'message' => 'category deleted successfully'
         ], 200);
     }
 }

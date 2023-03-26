@@ -2,12 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Plant;
-use App\Http\Requests\StorePlantRequest;
-use App\Http\Requests\UpdatePlantRequest;
+use App\Models\Role;
 use Illuminate\Http\Request;
 
-class PlantController extends Controller
+class RoleController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -16,9 +14,9 @@ class PlantController extends Controller
      */
     public function index()
     {
-        $Plants = Plant::with('category')->get();
+        $categories = Role::with('users')->get();
         return response()->json([
-            'record' => $Plants
+            'record' => $categories
         ]);
     }
 
@@ -41,17 +39,12 @@ class PlantController extends Controller
     {
 
         $request->validate([
-            'name' => 'required|string|max:255',
-            'description' => 'required|string',
-            'price' => 'required|numeric',
-            'image' => 'required|string',
-            'category_id' => 'required|int'
+            'role' => 'required|string|max:30',
         ]);
 
-
         $input = $request->all();
-        Plant::create($input);
-        return 'the plant has been created successfully';
+        Role::create($input);
+        return 'the role has been created successfully';
     }
 
     /**
@@ -60,13 +53,13 @@ class PlantController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(Plant $Plant)
+    public function show(Role $role)
     {
-        $Plant->find($Plant->id);
-        if (!$Plant) {
-            return response()->json(['message' => 'Plant not found'], 404);
+        $role->find($role->id);
+        if (!$role) {
+            return response()->json(['message' => 'role not found'], 404);
         }
-        return response()->json($Plant, 200);
+        return response()->json($role, 200);
     }
 
     /**
@@ -86,26 +79,22 @@ class PlantController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Plant $Plant)
+    public function update(Request $request, Role $role)
     {
         $request->validate([
-            'name' => 'required|string|max:255',
-            'description' => 'required|string',
-            'price' => 'required|numeric',
-            'image' => 'required|string',
-            'category_id' => 'required|int'
+            'role' => 'required|string|max:30',
         ]);
 
-        $Plant->update($request->all());
+        $role->update($request->all());
 
-        if (!$Plant) {
-            return response()->json(['message' => 'Plant not found'], 404);
+        if (!$role) {
+            return response()->json(['message' => 'role not found'], 404);
         }
 
         return response()->json([
             'status' => true,
-            'message' => "Plant Updated successfully!",
-            'Plant' => $Plant
+            'message' => "role Updated successfully!",
+            'role' => $role
         ], 200);
     }
 
@@ -115,19 +104,19 @@ class PlantController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Plant $plant)
+    public function destroy(Role $role)
     {
-        $plant->delete();
+        $role->delete();
 
-        if (!$plant) {
+        if (!$role) {
             return response()->json([
-                'message' => 'plant not found'
+                'message' => 'role not found'
             ], 404);
         }
 
         return response()->json([
             'status' => true,
-            'message' => 'plant deleted successfully'
+            'message' => 'role deleted successfully'
         ], 200);
     }
 }

@@ -8,9 +8,16 @@ use Illuminate\Database\Eloquent\Model;
 class Plant extends Model
 {
     use HasFactory;
+    protected $fillable = [
+        'name', 'description', 'price', 'image', 'category_id'
+    ];
 
-    public function categroy()
+    public function category()
     {
         return $this->belongsTo(Category::class, 'category_id', 'id');
     }
+
+    protected $hidden = [
+        'created_at', 'updated_at'
+    ];
 }
