@@ -23,7 +23,7 @@ class adminMiddleware
 
             $role_id = $user->role_id; // get the user's role
 
-            if ($role_id == 1) {
+            if ($role_id != 2) {
                 //return $next();
                 // return 1;///response()->json(['message' => 'you are not admin']);
                 return 1;

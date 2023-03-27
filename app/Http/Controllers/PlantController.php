@@ -12,7 +12,7 @@ class PlantController extends Controller
 {
     public function __construct()
     {
-        $this->middleware(["auth:api"], ["except" => ["index"]]);
+        $this->middleware(["auth:api"], ["except" => ["index", "show"]]);
     }
     /**
      * Display a listing of the resource.
@@ -42,10 +42,14 @@ class PlantController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
+
     public function store(Request $request)
     {
-        //return Auth::user()->role_id == 2;
-        $this->authorize('create', Auth::user());
+        // $this->authorize('create', Auth::user());
+        $user = Auth::user();
+        if ($user->role_id == 3) {
+            return response()->json(['error' => 'You are not authorized to create new plants'], 403);
+        }
         $request->validate([
             'name' => 'required|string|max:255',
             'description' => 'required|string',
@@ -94,6 +98,11 @@ class PlantController extends Controller
      */
     public function update(Request $request, Plant $Plant)
     {
+        // $this->authorize('update', Auth::user());
+        $user = Auth::user();
+        if ($user->role_id == 3) {
+            return response()->json(['error' => 'You are not authorized to update new plants'], 403);
+        }
         $request->validate([
             'name' => 'required|string|max:255',
             'description' => 'required|string',
@@ -123,6 +132,12 @@ class PlantController extends Controller
      */
     public function destroy(Plant $plant)
     {
+        // $this->authorize('delete', Auth::user());
+        $user = Auth::user();
+        if ($user->role_id == 3) {
+            return response()->json(['error' => 'You are not authorized to delete the plants'], 403);
+        }
+
         $plant->delete();
 
         if (!$plant) {

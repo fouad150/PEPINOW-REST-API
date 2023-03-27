@@ -4,9 +4,15 @@ namespace App\Http\Controllers;
 
 use App\Models\Role;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class RoleController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware(["auth:api"], ["except" => ["index", "show"]]);
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -37,6 +43,11 @@ class RoleController extends Controller
      */
     public function store(Request $request)
     {
+        // $this->authorize("create", Auth::user());
+        $user = Auth::user();
+        if ($user->role_id != 1) {
+            return response()->json(['error' => 'You are not authorized to add roles'], 403);
+        }
 
         $request->validate([
             'role' => 'required|string|max:30',
@@ -81,6 +92,12 @@ class RoleController extends Controller
      */
     public function update(Request $request, Role $role)
     {
+        // $this->authorize("update", Auth::user());
+        $user = Auth::user();
+        if ($user->role_id != 1) {
+            return response()->json(['error' => 'You are not authorized to update roles'], 403);
+        }
+
         $request->validate([
             'role' => 'required|string|max:30',
         ]);
@@ -106,6 +123,12 @@ class RoleController extends Controller
      */
     public function destroy(Role $role)
     {
+        // $this->authorize("delete", Auth::user());
+        $user = Auth::user();
+        if ($user->role_id != 1) {
+            return response()->json(['error' => 'You are not authorized to delete roles'], 403);
+        }
+
         $role->delete();
 
         if (!$role) {

@@ -41,13 +41,9 @@ class CategoryPolicy
      */
     public function create(User $user)
     {
-        return true;
+        return $user->role_id == 3;
     }
 
-    public function store(User $user)
-    {
-        return true;
-    }
     /**
      * Determine whether the user can update the model.
      *
@@ -57,7 +53,7 @@ class CategoryPolicy
      */
     public function update(User $user, Category $category)
     {
-        return true;
+        return $user->role_id == 3;
     }
 
     /**
@@ -69,7 +65,7 @@ class CategoryPolicy
      */
     public function delete(User $user, Category $category)
     {
-        //
+        return $user->role_id == 3;
     }
 
     /**

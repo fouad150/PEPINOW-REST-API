@@ -11,7 +11,7 @@ class CategoryController extends Controller
 
     public function __construct()
     {
-        $this->middleware(["auth:api"], ["except" => ["index"]]);
+        $this->middleware(["auth:api"], ["except" => ["index", "show", "getPlantesOfCategory"]]);
     }
     /**
      * Display a listing of the resource.
@@ -43,7 +43,12 @@ class CategoryController extends Controller
      */
     public function store(Request $request)
     {
-        $this->authorize("store", Auth::user());
+        // $this->authorize("create", Auth::user());
+        $user = Auth::user();
+        if ($user->role_id != 1) {
+            return response()->json(['error' => 'You are not authorized to add new categories'], 403);
+        }
+
         $request->validate([
             'category' => 'required|string|max:30',
         ]);
@@ -87,7 +92,11 @@ class CategoryController extends Controller
      */
     public function update(Request $request, Category $category)
     {
-        //$this->authorize('update', Auth::user(), $category);
+        // $this->authorize("update", Auth::user());
+        $user = Auth::user();
+        if ($user->role_id != 1) {
+            return response()->json(['error' => 'You are not authorized to update the categories'], 403);
+        }
         $request->validate([
             'category' => 'required|string|max:30',
         ]);
@@ -113,6 +122,12 @@ class CategoryController extends Controller
      */
     public function destroy(Category $category)
     {
+        // $this->authorize("delete", Auth::user());
+        $user = Auth::user();
+        if ($user->role_id != 1) {
+            return response()->json(['error' => 'You are not authorized to delete categories'], 403);
+        }
+
         $category->delete();
 
         if (!$category) {

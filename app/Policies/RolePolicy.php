@@ -2,11 +2,11 @@
 
 namespace App\Policies;
 
-use App\Models\Plant;
+use App\Models\Role;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
-class PlantPolicy
+class RolePolicy
 {
     use HandlesAuthorization;
 
@@ -25,10 +25,10 @@ class PlantPolicy
      * Determine whether the user can view the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\Plant  $plant
+     * @param  \App\Models\Role  $role
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function view(User $user, Plant $plant)
+    public function view(User $user, Role $role)
     {
         //
     }
@@ -41,41 +41,41 @@ class PlantPolicy
      */
     public function create(User $user)
     {
-        return $user->role_id != 3;
+        return $user->role_id == 1;
     }
 
     /**
      * Determine whether the user can update the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\Plant  $plant
+     * @param  \App\Models\Role  $role
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function update(User $user, Plant $plant)
+    public function update(User $user, Role $role)
     {
-        return $user->role_id != 3;
+        return $user->role_id == 1;
     }
 
     /**
      * Determine whether the user can delete the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\Plant  $plant
+     * @param  \App\Models\Role  $role
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function delete(User $user, Plant $plant)
+    public function delete(User $user, Role $role)
     {
-        return $user->role_id != 3;
+        return $user->role_id == 1;
     }
 
     /**
      * Determine whether the user can restore the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\Plant  $plant
+     * @param  \App\Models\Role  $role
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function restore(User $user, Plant $plant)
+    public function restore(User $user, Role $role)
     {
         //
     }
@@ -84,10 +84,10 @@ class PlantPolicy
      * Determine whether the user can permanently delete the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\Plant  $plant
+     * @param  \App\Models\Role  $role
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function forceDelete(User $user, Plant $plant)
+    public function forceDelete(User $user, Role $role)
     {
         //
     }
