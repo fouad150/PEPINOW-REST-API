@@ -33,3 +33,4 @@ Route::controller(AuthController::class)->group(function () {
 Route::apiResource('/plants', PlantController::class);
 Route::apiResource('/categories', CategoryController::class);
 Route::apiResource('/roles', RoleController::class);
+Route::get('/plantsOfCategory/{category}', [CategoryController::class, 'getPlantesOfCategory']);

@@ -4,9 +4,15 @@ namespace App\Http\Controllers;
 
 use App\Models\Category;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class CategoryController extends Controller
 {
+
+    public function __construct()
+    {
+        $this->middleware(["auth:api"], ["except" => ["index"]]);
+    }
     /**
      * Display a listing of the resource.
      *
@@ -37,7 +43,7 @@ class CategoryController extends Controller
      */
     public function store(Request $request)
     {
-
+        $this->authorize("store", Auth::user());
         $request->validate([
             'category' => 'required|string|max:30',
         ]);
@@ -81,6 +87,7 @@ class CategoryController extends Controller
      */
     public function update(Request $request, Category $category)
     {
+        //$this->authorize('update', Auth::user(), $category);
         $request->validate([
             'category' => 'required|string|max:30',
         ]);
@@ -117,6 +124,24 @@ class CategoryController extends Controller
         return response()->json([
             'status' => true,
             'message' => 'category deleted successfully'
+        ], 200);
+    }
+
+    public function getPlantesOfCategory($category_id)
+    {
+        // $this->authorize('view categories', Category::class);
+        $category = Category::find($category_id);
+        if (!$category) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'category not found',
+                'data' => null
+            ], 404);
+        }
+        return response()->json([
+            'status' => 'success',
+            'message' => 'all plants by category',
+            'data' => $category->plantes
         ], 200);
     }
 }

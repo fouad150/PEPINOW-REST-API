@@ -6,9 +6,14 @@ use App\Models\Plant;
 use App\Http\Requests\StorePlantRequest;
 use App\Http\Requests\UpdatePlantRequest;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class PlantController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware(["auth:api"], ["except" => ["index"]]);
+    }
     /**
      * Display a listing of the resource.
      *
@@ -39,7 +44,8 @@ class PlantController extends Controller
      */
     public function store(Request $request)
     {
-
+        //return Auth::user()->role_id == 2;
+        $this->authorize('create', Auth::user());
         $request->validate([
             'name' => 'required|string|max:255',
             'description' => 'required|string',
